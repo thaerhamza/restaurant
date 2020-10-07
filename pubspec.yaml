@@ -50,7 +50,18 @@ flutter:
     - images/tip1.png
     - images/tip2.png
     - images/tip3.png
-
+    #====================product
+    - images/product/pro1.jpg
+    - images/product/pro2.jpg
+    - images/product/pro3.jpg
+    #====================category
+    - images/category/cat1.png
+    - images/category/cat2.png
+    - images/category/cat3.png
+    - images/category/cat4.png
+    - images/category/cat5.png
+    - images/category/cat6.png
+    - images/category/cat7.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

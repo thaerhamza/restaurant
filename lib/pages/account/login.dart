@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant/pages/account/forgetPassword.dart';
 import 'package:restaurant/pages/account/register.dart';
+import 'package:restaurant/pages/home/home.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -96,7 +97,12 @@ class _LoginState extends State<Login> {
                         ),
                       ),
                       MaterialButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => new Home()));
+                          },
                           child: Container(
                             alignment: Alignment.center,
                             width: MediaQuery.of(context).size.width,
