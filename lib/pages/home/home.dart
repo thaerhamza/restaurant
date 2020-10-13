@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:restaurant/pages/drawer/mydrawer.dart';
+import 'package:restaurant/pages/product/product_detail.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -6,6 +8,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  GlobalKey<ScaffoldState> _keyDrawer = GlobalKey<ScaffoldState>();
   var myarr_product = [
     {
       "pro_id": "1",
@@ -67,6 +70,8 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Container(
       child: Scaffold(
+        key: _keyDrawer,
+        endDrawer: MyDrawer(),
         body: Directionality(
           textDirection: TextDirection.rtl,
           child: Column(
@@ -100,10 +105,15 @@ class _HomeState extends State<Home> {
                 padding: EdgeInsets.all(15.0),
                 child: Row(
                   children: <Widget>[
-                    new Icon(
-                      Icons.menu,
-                      color: Colors.red,
-                      size: 40.0,
+                    GestureDetector(
+                      onTap: () {
+                        _keyDrawer.currentState.openEndDrawer();
+                      },
+                      child: new Icon(
+                        Icons.menu,
+                        color: Colors.red,
+                        size: 40.0,
+                      ),
                     ),
                     Expanded(
                       child: new Container(
@@ -198,29 +208,35 @@ class SingleProduct extends StatelessWidget {
   SingleProduct({this.pro_id, this.pro_name, this.pro_desc, this.pro_image});
   @override
   Widget build(BuildContext context) {
-    return new Container(
-      padding: EdgeInsets.all(10.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          new Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height / 4,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15.0),
-                image: DecorationImage(
-                    fit: BoxFit.cover, image: AssetImage(pro_image))),
-          ),
-          new Text(
-            pro_name,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-          ),
-          new Text(
-            pro_desc,
-            style: TextStyle(color: Colors.grey),
-          ),
-        ],
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => ProductDetail()));
+      },
+      child: new Container(
+        padding: EdgeInsets.all(10.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            new Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height / 4,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15.0),
+                  image: DecorationImage(
+                      fit: BoxFit.cover, image: AssetImage(pro_image))),
+            ),
+            new Text(
+              pro_name,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            new Text(
+              pro_desc,
+              style: TextStyle(color: Colors.grey),
+            ),
+          ],
+        ),
       ),
     );
   }
