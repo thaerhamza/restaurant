@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:restaurant/pages/shopping/shopping.dart';
 
 class ProductDetail extends StatefulWidget {
   @override
@@ -50,7 +51,12 @@ class _ProductDetailState extends State<ProductDetail> {
                     Icons.shopping_cart,
                     color: Colors.red,
                   ),
-                  onPressed: () {})),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => new Shopping()));
+                  })),
         ],
       ),
     );
@@ -58,7 +64,7 @@ class _ProductDetailState extends State<ProductDetail> {
 
   Widget imageProduct() {
     return Container(
-      padding: EdgeInsets.all(10.0),
+      padding: EdgeInsets.only(bottom: 10.0),
       decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [
@@ -133,44 +139,57 @@ class _ProductDetailState extends State<ProductDetail> {
       backgroundColor: Colors.white,
       body: Directionality(
         textDirection: TextDirection.rtl,
-        child: ListView(
-          children: <Widget>[
-            headerBuild(),
-            imageProduct(),
-            Container(
-              padding: EdgeInsets.all(25.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  new Text(
-                    "سمك مشوي",
-                    style: TextStyle(fontSize: 30.0),
-                  ),
-                  new Row(
+        child: Stack(
+          children: [
+            ListView(
+              children: <Widget>[
+                imageProduct(),
+                Container(
+                  padding: EdgeInsets.all(25.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      new Icon(Icons.favorite, color: Colors.red),
                       new Text(
-                        "5",
-                        style: TextStyle(fontSize: 16),
+                        "سمك مشوي",
+                        style: TextStyle(fontSize: 30.0),
                       ),
-                      new Expanded(child: Text("")),
-                      new Icon(
-                        Icons.star,
-                        color: Colors.orange,
+                      new Row(
+                        children: <Widget>[
+                          new Icon(Icons.favorite, color: Colors.red),
+                          new Text(
+                            "5",
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          new Expanded(child: Text("")),
+                          new Icon(
+                            Icons.star,
+                            color: Colors.orange,
+                          ),
+                          new Text(
+                            "5 review",
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ],
                       ),
+                      Padding(padding: EdgeInsets.only(bottom: 15.0)),
                       new Text(
-                        "5 review",
-                        style: TextStyle(fontSize: 16),
-                      ),
+                        "سمك مشوي سمك مشوي سمك مشويسمك مشويسمك مشويسمك مشوي سمك مشوي سمك مشويسمك مشوي" +
+                            "سمك مشوي سمك مشوي سمك مشويسمك مشويسمك مشويسمك مشوي سمك مشوي سمك مشويسمك مشوي" +
+                            "سمك مشوي سمك مشوي سمك مشويسمك مشويسمك مشويسمك مشوي سمك مشوي سمك مشويسمك مشوي" +
+                            "سمك مشوي سمك مشوي سمك مشويسمك مشويسمك مشويسمك مشوي سمك مشوي سمك مشويسمك مشوي",
+                        style: TextStyle(fontSize: 16.0, color: Colors.grey),
+                      )
                     ],
                   ),
-                  Padding(padding: EdgeInsets.only(bottom: 15.0)),
-                  new Text(
-                    "سمك مشوي سمك مشوي سمك مشويسمك مشويسمك مشويسمك مشوي سمك مشوي سمك مشويسمك مشوي",
-                    style: TextStyle(fontSize: 16.0, color: Colors.grey),
-                  )
-                ],
-              ),
+                )
+              ],
+            ),
+            Positioned(
+              top: 0.0,
+              left: 0.0,
+              right: 0.0,
+              height: 120.0,
+              child: headerBuild(),
             )
           ],
         ),
@@ -198,7 +217,7 @@ class _ProductDetailState extends State<ProductDetail> {
                   ],
                   borderRadius: BorderRadius.circular(40)),
               margin: EdgeInsets.all(5),
-              padding: EdgeInsets.all(10),
+              padding: EdgeInsets.only(left: 10, right: 10),
               child: Text(
                 "اضافة الى السلة",
                 style: TextStyle(color: Colors.white, fontSize: 20),
@@ -215,7 +234,16 @@ class _ProductDetailState extends State<ProductDetail> {
         padding: EdgeInsets.only(left: 50, right: 30),
         height: 75.0,
         decoration: BoxDecoration(
-            color: Colors.red[300],
+            //color: Colors.red[300],
+            gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: <Color>[
+                  Colors.red,
+                  Colors.red[300],
+                  Colors.red[300],
+                  Colors.red,
+                ]),
             boxShadow: [
               BoxShadow(
                   color: Colors.grey[100],
