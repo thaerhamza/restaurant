@@ -72,7 +72,7 @@ class _ShoppingState extends State<Shopping> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey[50],
       body: Directionality(
         textDirection: TextDirection.rtl,
         child: Stack(
@@ -103,59 +103,74 @@ class _ShoppingState extends State<Shopping> {
         ),
       ),
       bottomNavigationBar: Container(
-        child: Row(
+        height: 210.0,
+        child: Column(
           children: <Widget>[
-            Text(
-              "1000",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold),
-            ),
-            Padding(padding: EdgeInsets.all(2)),
-            Text(
-              "المجموع",
-              style: TextStyle(color: Colors.white, fontSize: 20),
-            ),
-            Expanded(child: Text("")),
-            GestureDetector(
-              onTap: () {},
-              child: Row(
-                children: <Widget>[
-                  Text(
-                    "اضافة الى السلة",
-                    style: TextStyle(color: Colors.white, fontSize: 24),
-                  ),
-                  Icon(
-                    Icons.shopping_cart,
-                    color: Colors.white,
-                  ),
-                ],
+            Card(
+              child: Container(
+                padding: EdgeInsets.all(5.0),
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        new Text("اجمالي المبلغ"),
+                        new Expanded(child: Text("")),
+                        new Text("100.0")
+                      ],
+                    ),
+                    Divider(
+                      color: Colors.black,
+                    ),
+                    Row(
+                      children: <Widget>[
+                        new Text("دلفري"),
+                        new Expanded(child: Text("")),
+                        new Text("100.0")
+                      ],
+                    ),
+                    Divider(
+                      color: Colors.black,
+                    ),
+                    Row(
+                      children: <Widget>[
+                        new Text("الاجمالي الكلي"),
+                        new Expanded(child: Text("")),
+                        new Text("100.0")
+                      ],
+                    )
+                  ],
+                ),
               ),
+            ),
+            Container(
+              margin: EdgeInsets.only(bottom: 5.0),
+              alignment: Alignment.center,
+              child: GestureDetector(
+                onTap: () {},
+                child: Text(
+                  "اضافة الى السلة",
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+              ),
+              height: 40.0,
+              decoration: BoxDecoration(
+                  color: Colors.red, borderRadius: BorderRadius.circular(40)),
+            ),
+            Container(
+              alignment: Alignment.center,
+              child: GestureDetector(
+                onTap: () {},
+                child: Text(
+                  "تأكيد الطلبية",
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+              ),
+              height: 40.0,
+              decoration: BoxDecoration(
+                  color: Colors.red, borderRadius: BorderRadius.circular(40)),
             ),
           ],
         ),
-        padding: EdgeInsets.only(left: 50, right: 30),
-        height: 75.0,
-        decoration: BoxDecoration(
-            //color: Colors.red[300],
-            gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: <Color>[
-                  Colors.red,
-                  Colors.red[300],
-                  Colors.red[300],
-                  Colors.red,
-                ]),
-            boxShadow: [
-              BoxShadow(
-                  color: Colors.grey[100],
-                  spreadRadius: 7,
-                  blurRadius: 4,
-                  offset: Offset(0, 3))
-            ],
-            borderRadius: BorderRadius.circular(40)),
       ),
     );
   }
@@ -176,63 +191,76 @@ class SingleProduct extends StatelessWidget {
       this.pro_qty});
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: ListTile(
-        title: Text(
-          pro_name,
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        subtitle: Text(pro_price),
-        leading: Container(
-          width: 50.0,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(pro_image),
-              fit: BoxFit.cover,
+    return Card(
+      child: Column(
+        children: <Widget>[
+          Container(
+            alignment: Alignment.topRight,
+            child: Icon(
+              Icons.cancel,
+              color: Colors.red,
             ),
-            shape: BoxShape.circle,
           ),
-        ),
-        trailing: Container(
-          width: 70.0,
-          child: Row(
-            children: <Widget>[
-              GestureDetector(
-                child: Container(
-                  padding: EdgeInsets.all(5),
-                  child: FaIcon(
-                    FontAwesomeIcons.plus,
-                    color: Colors.white,
-                    size: 16,
+          Container(
+            child: ListTile(
+              title: Text(
+                pro_name,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              ),
+              subtitle: Text(pro_price),
+              leading: Container(
+                width: 50.0,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(pro_image),
+                    fit: BoxFit.cover,
                   ),
-                  decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(5.0)),
+                  shape: BoxShape.circle,
                 ),
               ),
-              Expanded(
-                child: new Text(
-                  pro_qty,
-                  style: TextStyle(fontSize: 19),
-                  textAlign: TextAlign.center,
+              trailing: Container(
+                width: 70.0,
+                child: Row(
+                  children: <Widget>[
+                    GestureDetector(
+                      child: Container(
+                        padding: EdgeInsets.all(5),
+                        child: FaIcon(
+                          FontAwesomeIcons.plus,
+                          color: Colors.white,
+                          size: 16,
+                        ),
+                        decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(5.0)),
+                      ),
+                    ),
+                    Expanded(
+                      child: new Text(
+                        pro_qty,
+                        style: TextStyle(fontSize: 19),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    GestureDetector(
+                      child: Container(
+                        padding: EdgeInsets.all(5),
+                        child: FaIcon(
+                          FontAwesomeIcons.minus,
+                          color: Colors.white,
+                          size: 16,
+                        ),
+                        decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(5.0)),
+                      ),
+                    )
+                  ],
                 ),
               ),
-              GestureDetector(
-                child: Container(
-                  padding: EdgeInsets.all(5),
-                  child: FaIcon(
-                    FontAwesomeIcons.minus,
-                    color: Colors.white,
-                    size: 16,
-                  ),
-                  decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(5.0)),
-                ),
-              )
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

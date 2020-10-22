@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:restaurant/pages/account/changepassword.dart';
+import 'package:restaurant/pages/account/myprofile.dart';
+import 'package:restaurant/pages/product/category.dart';
 
 class MyDrawer extends StatefulWidget {
   @override
@@ -8,6 +11,7 @@ class MyDrawer extends StatefulWidget {
 class _MyDrawerState extends State<MyDrawer> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context).copyWith(dividerColor: Colors.transparent);
     return Container(
       child: Drawer(
         child: Directionality(
@@ -36,11 +40,11 @@ class _MyDrawerState extends State<MyDrawer> {
               ),
               Container(
                 padding: EdgeInsets.only(right: 10.0, left: 10.0),
-                child: InkWell(
-                  onTap: () {},
-                  child: Column(
-                    children: <Widget>[
-                      ListTile(
+                child: Column(
+                  children: <Widget>[
+                    InkWell(
+                      onTap: () {},
+                      child: ListTile(
                         title: Text(
                           "الصفحة الرئيسية",
                           style: TextStyle(color: Colors.black, fontSize: 20.0),
@@ -55,26 +59,31 @@ class _MyDrawerState extends State<MyDrawer> {
                           size: 18.0,
                         ),
                       ),
-                      Divider(
-                        color: Colors.grey[500],
-                      ),
-                    ],
-                  ),
+                    ),
+                    Divider(
+                      color: Colors.grey[500],
+                    ),
+                  ],
                 ),
               ),
               Container(
                 padding: EdgeInsets.only(right: 10.0, left: 10.0),
-                child: InkWell(
-                  onTap: () {},
-                  child: Column(
-                    children: <Widget>[
-                      ListTile(
+                child: Column(
+                  children: <Widget>[
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => new Category()));
+                      },
+                      child: ListTile(
                         title: Text(
-                          "حسابي",
+                          "قائمة المأكولات",
                           style: TextStyle(color: Colors.black, fontSize: 20.0),
                         ),
                         leading: Icon(
-                          Icons.person,
+                          Icons.restaurant,
                           color: Colors.red,
                         ),
                         trailing: Icon(
@@ -83,20 +92,105 @@ class _MyDrawerState extends State<MyDrawer> {
                           size: 18.0,
                         ),
                       ),
-                      Divider(
-                        color: Colors.grey[500],
-                      ),
-                    ],
+                    ),
+                    Divider(
+                      color: Colors.grey[500],
+                    ),
+                  ],
+                ),
+              ),
+              Theme(
+                data: theme,
+                child: ExpansionTile(
+                  title: Text(
+                    "حسابي",
+                    style: TextStyle(color: Colors.black, fontSize: 16.0),
                   ),
+                  children: <Widget>[
+//======================child account
+                    Container(
+                      padding: EdgeInsets.only(right: 10.0, left: 10.0),
+                      child: Column(
+                        children: <Widget>[
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => new MyProfile()));
+                            },
+                            child: ListTile(
+                              title: Text(
+                                "تغيير الاعدادات الشخصية",
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 16.0),
+                              ),
+                              leading: Icon(
+                                Icons.settings,
+                                color: Colors.red,
+                              ),
+                              trailing: Icon(
+                                Icons.arrow_forward_ios,
+                                color: Colors.black,
+                                size: 18.0,
+                              ),
+                            ),
+                          ),
+                          Divider(
+                            color: Colors.grey[500],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(right: 10.0, left: 10.0),
+                      child: Column(
+                        children: <Widget>[
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          new ChangePassword()));
+                            },
+                            child: ListTile(
+                              title: Text(
+                                "تغيير كلمة المرور",
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 16.0),
+                              ),
+                              leading: Icon(
+                                Icons.lock_open,
+                                color: Colors.red,
+                              ),
+                              trailing: Icon(
+                                Icons.arrow_forward_ios,
+                                color: Colors.black,
+                                size: 18.0,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    //======================end child account
+                  ],
                 ),
               ),
               Container(
                 padding: EdgeInsets.only(right: 10.0, left: 10.0),
-                child: InkWell(
-                  onTap: () {},
-                  child: Column(
-                    children: <Widget>[
-                      ListTile(
+                child: Divider(
+                  color: Colors.grey[500],
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.only(right: 10.0, left: 10.0),
+                child: Column(
+                  children: <Widget>[
+                    InkWell(
+                      onTap: () {},
+                      child: ListTile(
                         title: Text(
                           "مفضلاتي",
                           style: TextStyle(color: Colors.black, fontSize: 20.0),
@@ -111,11 +205,95 @@ class _MyDrawerState extends State<MyDrawer> {
                           size: 18.0,
                         ),
                       ),
-                      Divider(
-                        color: Colors.grey[500],
+                    ),
+                    Divider(
+                      color: Colors.grey[500],
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.only(right: 10.0, left: 10.0),
+                child: Column(
+                  children: <Widget>[
+                    InkWell(
+                      onTap: () {},
+                      child: ListTile(
+                        title: Text(
+                          "طلباتي",
+                          style: TextStyle(color: Colors.black, fontSize: 20.0),
+                        ),
+                        leading: Icon(
+                          Icons.history,
+                          color: Colors.red,
+                        ),
+                        trailing: Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.black,
+                          size: 18.0,
+                        ),
                       ),
-                    ],
-                  ),
+                    ),
+                    Divider(
+                      color: Colors.grey[500],
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.only(right: 10.0, left: 10.0),
+                child: Column(
+                  children: <Widget>[
+                    InkWell(
+                      onTap: () {},
+                      child: ListTile(
+                        title: Text(
+                          "من نحن",
+                          style: TextStyle(color: Colors.black, fontSize: 20.0),
+                        ),
+                        leading: Icon(
+                          Icons.message,
+                          color: Colors.red,
+                        ),
+                        trailing: Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.black,
+                          size: 18.0,
+                        ),
+                      ),
+                    ),
+                    Divider(
+                      color: Colors.grey[500],
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.only(right: 10.0, left: 10.0),
+                child: Column(
+                  children: <Widget>[
+                    InkWell(
+                      onTap: () {},
+                      child: ListTile(
+                        title: Text(
+                          "مركز الدعم",
+                          style: TextStyle(color: Colors.black, fontSize: 20.0),
+                        ),
+                        leading: Icon(
+                          Icons.phone,
+                          color: Colors.red,
+                        ),
+                        trailing: Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.black,
+                          size: 18.0,
+                        ),
+                      ),
+                    ),
+                    Divider(
+                      color: Colors.grey[500],
+                    ),
+                  ],
                 ),
               ),
             ],
