@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant/pages/account/changepassword.dart';
 import 'package:restaurant/pages/account/myprofile.dart';
+import 'package:restaurant/pages/favorite/favorite.dart';
 import 'package:restaurant/pages/product/category.dart';
 
 class MyDrawer extends StatefulWidget {
@@ -189,7 +190,12 @@ class _MyDrawerState extends State<MyDrawer> {
                 child: Column(
                   children: <Widget>[
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => new Favorite()));
+                      },
                       child: ListTile(
                         title: Text(
                           "مفضلاتي",

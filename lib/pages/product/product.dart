@@ -66,6 +66,27 @@ class _ProductState extends State<Product> {
       "pro_image": "images/product/pro3.jpg",
       "pro_offer": "0",
     },
+    {
+      "pro_id": "3",
+      "pro_name": "product3",
+      "pro_desc": "desc product1 desc product1 desc product1 desc product1 ",
+      "pro_image": "images/product/pro3.jpg",
+      "pro_offer": "0",
+    },
+    {
+      "pro_id": "3",
+      "pro_name": "product3",
+      "pro_desc": "desc product1 desc product1 desc product1 desc product1 ",
+      "pro_image": "images/product/pro3.jpg",
+      "pro_offer": "0",
+    },
+    {
+      "pro_id": "3",
+      "pro_name": "product3",
+      "pro_desc": "desc product1 desc product1 desc product1 desc product1 ",
+      "pro_image": "images/product/pro3.jpg",
+      "pro_offer": "0",
+    },
   ];
   @override
   Widget build(BuildContext context) {
@@ -82,7 +103,9 @@ class _ProductState extends State<Product> {
                   Icons.arrow_back_ios,
                   color: Colors.black,
                 ),
-                onPressed: null),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                }),
           ),
           body: Container(
             child: ListView.builder(
