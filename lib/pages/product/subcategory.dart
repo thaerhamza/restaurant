@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:restaurant/pages/product/product.dart';
 
 class SubCategory extends StatefulWidget {
   final String cat_id;
@@ -104,8 +105,8 @@ class SingleSubCategory extends StatelessWidget {
         children: <Widget>[
           InkWell(
             onTap: () {
-              /* Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => new SubCategory()));*/
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => new Product()));
             },
             child: ListTile(
               leading: Container(
