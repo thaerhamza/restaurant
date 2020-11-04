@@ -147,7 +147,7 @@ class _HomeState extends State<Home> {
                     }),
               ),
               new Container(
-                height: 320.0,
+                height: MediaQuery.of(context).size.height / 3 + 80,
                 width: MediaQuery.of(context).size.width,
                 child: ListView.builder(
                     itemCount: myarr_product.length,

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:restaurant/pages/account/changepassword.dart';
 import 'package:restaurant/pages/account/myprofile.dart';
 import 'package:restaurant/pages/favorite/favorite.dart';
+import 'package:restaurant/pages/order/tracking.dart';
 import 'package:restaurant/pages/product/category.dart';
+import 'package:restaurant/pages/shopping/shopping.dart';
 
 class MyDrawer extends StatefulWidget {
   @override
@@ -223,7 +225,12 @@ class _MyDrawerState extends State<MyDrawer> {
                 child: Column(
                   children: <Widget>[
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => new Shopping()));
+                      },
                       child: ListTile(
                         title: Text(
                           "طلباتي",
@@ -231,6 +238,39 @@ class _MyDrawerState extends State<MyDrawer> {
                         ),
                         leading: Icon(
                           Icons.history,
+                          color: Colors.red,
+                        ),
+                        trailing: Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.black,
+                          size: 18.0,
+                        ),
+                      ),
+                    ),
+                    Divider(
+                      color: Colors.grey[500],
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.only(right: 10.0, left: 10.0),
+                child: Column(
+                  children: <Widget>[
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => new Tracking()));
+                      },
+                      child: ListTile(
+                        title: Text(
+                          "تتبع الطلبية",
+                          style: TextStyle(color: Colors.black, fontSize: 20.0),
+                        ),
+                        leading: Icon(
+                          Icons.drive_eta,
                           color: Colors.red,
                         ),
                         trailing: Icon(

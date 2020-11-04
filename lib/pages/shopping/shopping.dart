@@ -69,6 +69,79 @@ class _ShoppingState extends State<Shopping> {
       "pro_qty": "3"
     },
   ];
+  void _showSheetMessage(context) {
+    showModalBottomSheet(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(15.0),
+                topRight: Radius.circular(15.0))),
+        context: context,
+        builder: (BuildContext bc) {
+          return Container(
+              child: ListView(
+            children: <Widget>[
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                      margin: EdgeInsets.only(top: 30.0, bottom: 30.0),
+                      child:
+                          new Icon(Icons.done, size: 55.0, color: Colors.red)),
+                  new Text(
+                    "شكرا لطلبك",
+                    style: TextStyle(
+                        color: Colors.red,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 25.0),
+                  ),
+                  new Text(
+                    "يمكنك تتبع الطلبية من خلال الضغط على الزر في الاسفل",
+                    style: TextStyle(color: Colors.grey, fontSize: 16.0),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 50.0),
+                    child: MaterialButton(
+                        child: Container(
+                          margin: EdgeInsets.all(15.0),
+                          width: MediaQuery.of(context).size.width,
+                          child: Text("تابع الطلبية",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 20.0,
+                                color: Colors.white,
+                              )),
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                        ),
+                        onPressed: () {}),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 5.0),
+                    child: MaterialButton(
+                        child: Container(
+                          margin: EdgeInsets.all(15.0),
+                          width: MediaQuery.of(context).size.width,
+                          child: Text("الانتقال الى المأكولات",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 20.0,
+                              )),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[100],
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                        ),
+                        onPressed: () {}),
+                  )
+                ],
+              )
+            ],
+          ));
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -159,7 +232,9 @@ class _ShoppingState extends State<Shopping> {
             Container(
               alignment: Alignment.center,
               child: GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  _showSheetMessage(context);
+                },
                 child: Text(
                   "تأكيد الطلبية",
                   style: TextStyle(color: Colors.white, fontSize: 20),
