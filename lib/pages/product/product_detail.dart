@@ -1,8 +1,13 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:restaurant/pages/config.dart';
+import 'package:restaurant/pages/product/productData.dart';
 import 'package:restaurant/pages/shopping/shopping.dart';
 
 class ProductDetail extends StatefulWidget {
+  final FoodData food;
+  ProductDetail({@required this.food});
   @override
   _ProductDetailState createState() => _ProductDetailState();
 }
@@ -79,7 +84,12 @@ class _ProductDetailState extends State<ProductDetail> {
               bottomRight: Radius.circular(50.0))),
       child: Column(
         children: <Widget>[
-          Image.asset("images/product/pro1.jpg"),
+          CachedNetworkImage(
+            fit: BoxFit.cover,
+            imageUrl: imagesFood + widget.food.foo_image,
+            placeholder: (context, url) => CircularProgressIndicator(),
+            errorWidget: (context, url, error) => Icon(Icons.error),
+          ),
           Padding(padding: EdgeInsets.only(top: 30.0)),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -150,8 +160,31 @@ class _ProductDetailState extends State<ProductDetail> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       new Text(
-                        "سمك مشوي",
+                        widget.food.foo_name,
                         style: TextStyle(fontSize: 30.0),
+                      ),
+                      Row(
+                        children: [
+                          new Text(
+                            "السعر ",
+                            style: TextStyle(
+                              fontSize: 22.0,
+                            ),
+                          ),
+                          new Text(
+                            widget.food.foo_price,
+                            style: TextStyle(
+                                fontSize: 30.0,
+                                fontFamily: "Arial",
+                                color: Colors.red),
+                          ),
+                          new Text(
+                            currency,
+                            style: TextStyle(
+                              fontSize: 22.0,
+                            ),
+                          ),
+                        ],
                       ),
                       new Row(
                         children: <Widget>[
@@ -173,10 +206,7 @@ class _ProductDetailState extends State<ProductDetail> {
                       ),
                       Padding(padding: EdgeInsets.only(bottom: 15.0)),
                       new Text(
-                        "سمك مشوي سمك مشوي سمك مشويسمك مشويسمك مشويسمك مشوي سمك مشوي سمك مشويسمك مشوي" +
-                            "سمك مشوي سمك مشوي سمك مشويسمك مشويسمك مشويسمك مشوي سمك مشوي سمك مشويسمك مشوي" +
-                            "سمك مشوي سمك مشوي سمك مشويسمك مشويسمك مشويسمك مشوي سمك مشوي سمك مشويسمك مشوي" +
-                            "سمك مشوي سمك مشوي سمك مشويسمك مشويسمك مشويسمك مشوي سمك مشوي سمك مشويسمك مشوي",
+                        widget.food.foo_info,
                         style: TextStyle(fontSize: 16.0, color: Colors.grey),
                       )
                     ],

@@ -1,5 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:restaurant/pages/product/product.dart';
 import 'package:restaurant/pages/product/subcategory.dart';
+
+import '../config.dart';
+import '../function.dart';
 
 class Category extends StatefulWidget {
   @override
@@ -7,43 +12,32 @@ class Category extends StatefulWidget {
 }
 
 class _CategoryState extends State<Category> {
-  var myarr_category = [
-    {
-      "cat_id": "1",
-      "cat_name": "مأكولات بحرية",
-      "cat_image": "images/category/cat1.png"
-    },
-    {
-      "cat_id": "2",
-      "cat_name": "مقبلات",
-      "cat_image": "images/category/cat2.png"
-    },
-    {
-      "cat_id": "3",
-      "cat_name": "مشاوي",
-      "cat_image": "images/category/cat3.png"
-    },
-    {
-      "cat_id": "4",
-      "cat_name": "cat4",
-      "cat_image": "images/category/cat4.png"
-    },
-    {
-      "cat_id": "5",
-      "cat_name": "cat5",
-      "cat_image": "images/category/cat5.png"
-    },
-    {
-      "cat_id": "6",
-      "cat_name": "cat6",
-      "cat_image": "images/category/cat6.png"
-    },
-    {
-      "cat_id": "7",
-      "cat_name": "cat7",
-      "cat_image": "images/category/cat7.png"
-    },
-  ];
+  var myarr_category = [];
+  bool loadingCategory = false;
+  getCategoryData() async {
+    loadingCategory = true;
+    setState(() {});
+    List arr = await getData(0, 100, "category/readcategory.php", "", "");
+    for (int i = 0; i < arr.length; i++) {
+      myarr_category.add({
+        "cat_id": arr[i]["cat_id"],
+        "cat_name": arr[i]["cat_name"],
+        "cat_image": arr[i]["cat_thumbnail"] == null
+            ? "def.png"
+            : arr[i]["cat_thumbnail"]
+      });
+    }
+    loadingCategory = false;
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getCategoryData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,7 +89,7 @@ class SingleCategory extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => new SubCategory(
+                      builder: (context) => new Product(
                             cat_id: cat_id,
                             cat_name: cat_name,
                           )));
@@ -106,7 +100,25 @@ class SingleCategory extends StatelessWidget {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(50.0),
                     color: Colors.red[100]),
-                child: Image.asset(cat_image),
+                child: cat_image == null || cat_image == ""
+                    ? CachedNetworkImage(
+                        height: 64.0,
+                        width: 64.0,
+                        fit: BoxFit.cover,
+                        imageUrl: images_Category + "def.png",
+                        placeholder: (context, url) =>
+                            CircularProgressIndicator(),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
+                      )
+                    : CachedNetworkImage(
+                        height: 64.0,
+                        width: 64.0,
+                        fit: BoxFit.cover,
+                        imageUrl: images_Category + cat_image,
+                        placeholder: (context, url) =>
+                            CircularProgressIndicator(),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
+                      ),
               ),
               title: Text(
                 cat_name,

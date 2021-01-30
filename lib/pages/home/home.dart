@@ -1,6 +1,14 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:restaurant/pages/drawer/mydrawer.dart';
+import 'package:restaurant/pages/product/product.dart';
+import 'package:restaurant/pages/product/productData.dart';
 import 'package:restaurant/pages/product/product_detail.dart';
+import 'package:restaurant/pages/provider/loading.dart';
+
+import '../config.dart';
+import '../function.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -9,65 +17,88 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   GlobalKey<ScaffoldState> _keyDrawer = GlobalKey<ScaffoldState>();
-  var myarr_product = [
-    {
-      "pro_id": "1",
-      "pro_name": "product1",
-      "pro_desc": "desc product1 desc product1 desc product1 desc product1 ",
-      "pro_image": "images/product/pro1.jpg"
-    },
-    {
-      "pro_id": "2",
-      "pro_name": "product2",
-      "pro_desc": "desc product1 desc product1 desc product1 desc product1 ",
-      "pro_image": "images/product/pro2.jpg"
-    },
-    {
-      "pro_id": "3",
-      "pro_name": "product3",
-      "pro_desc": "desc product1 desc product1 desc product1 desc product1 ",
-      "pro_image": "images/product/pro3.jpg"
-    },
-  ];
-  var myarr_category = [
-    {
-      "cat_id": "1",
-      "cat_name": "cat1",
-      "cat_image": "images/category/cat1.png"
-    },
-    {
-      "cat_id": "2",
-      "cat_name": "cat2",
-      "cat_image": "images/category/cat2.png"
-    },
-    {
-      "cat_id": "3",
-      "cat_name": "cat3",
-      "cat_image": "images/category/cat3.png"
-    },
-    {
-      "cat_id": "4",
-      "cat_name": "cat4",
-      "cat_image": "images/category/cat4.png"
-    },
-    {
-      "cat_id": "5",
-      "cat_name": "cat5",
-      "cat_image": "images/category/cat5.png"
-    },
-    {
-      "cat_id": "6",
-      "cat_name": "cat6",
-      "cat_image": "images/category/cat6.png"
-    },
-    {
-      "cat_id": "7",
-      "cat_name": "cat7",
-      "cat_image": "images/category/cat7.png"
-    },
-  ];
+  bool loadingCategory = false;
+
+  var myarr_category = [];
+
+  getCategoryData() async {
+    loadingCategory = true;
+    setState(() {});
+    List arr = await getData(0, 100, "category/readcategory.php", "", "");
+    for (int i = 0; i < arr.length; i++) {
+      myarr_category.add({
+        "cat_id": arr[i]["cat_id"],
+        "cat_name": arr[i]["cat_name"],
+        "cat_image": arr[i]["cat_thumbnail"] == null
+            ? "def.png"
+            : arr[i]["cat_thumbnail"]
+      });
+    }
+    loadingCategory = false;
+    setState(() {});
+  }
+
+//=====================================food
+  List<FoodData> foodList = null;
+  ScrollController myScroll;
+  GlobalKey<RefreshIndicatorState> refreshKey;
+  int i = 0;
+  bool loadingList = false;
+  void getDataFood(int count, String strSearch) async {
+    loadingList = true;
+    setState(() {});
+    List arr = await getData(count, 20, "food/readfoodcustomer.php", strSearch,
+        "foo_offer=1&cus_id=${G_cus_id}&");
+    for (int i = 0; i < arr.length; i++) {
+      foodList.add(new FoodData(
+        foo_id: arr[i]["foo_id"],
+        cat_id: arr[i]["cat_id"],
+        foo_name: arr[i]["foo_name"],
+        foo_name_en: arr[i]["foo_name_en"],
+        foo_price: arr[i]["foo_price"],
+        foo_offer: arr[i]["foo_offer"],
+        foo_info: arr[i]["foo_info"],
+        foo_info_en: arr[i]["foo_info_en"],
+        foo_regdate: arr[i]["foo_regdate"],
+        foo_thumbnail: arr[i]["foo_thumbnail"],
+        foo_image: arr[i]["foo_image"],
+      ));
+    }
+    loadingList = false;
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    myScroll.dispose();
+    foodList.clear();
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getCategoryData();
+    foodList = new List<FoodData>();
+    myScroll = new ScrollController();
+    refreshKey = GlobalKey<RefreshIndicatorState>();
+    getDataFood(0, "");
+
+    myScroll.addListener(() {
+      if (myScroll.position.pixels == myScroll.position.maxScrollExtent) {
+        i += 20;
+        getDataFood(i, "");
+        print("scroll");
+      }
+    });
+  }
+
+//=====================================food
   @override
   Widget build(BuildContext context) {
+    var myProv = Provider.of<LoadingControl>(context);
     return Container(
       child: Scaffold(
         key: _keyDrawer,
@@ -127,6 +158,14 @@ class _HomeState extends State<Home> {
                               border: InputBorder.none,
                               hintText: "بحث",
                               suffixIcon: Icon(Icons.search)),
+                          onChanged: (text) {
+                            print(text);
+
+                            foodList.clear();
+                            i = 0;
+                            getDataFood(0, text);
+                            myProv.add_loading();
+                          },
                         ),
                       ),
                     ),
@@ -146,19 +185,17 @@ class _HomeState extends State<Home> {
                           cat_name: myarr_category[index]["cat_name"]);
                     }),
               ),
-              new Container(
-                height: MediaQuery.of(context).size.height / 3 + 80,
-                width: MediaQuery.of(context).size.width,
-                child: ListView.builder(
-                    itemCount: myarr_product.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return SingleProduct(
-                        pro_id: myarr_product[index]["pro_id"],
-                        pro_image: myarr_product[index]["pro_image"],
-                        pro_name: myarr_product[index]["pro_name"],
-                        pro_desc: myarr_product[index]["pro_desc"],
-                      );
-                    }),
+              Expanded(
+                child: new Container(
+                  child: ListView.builder(
+                      itemCount: foodList.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return SingleProduct(
+                          foo_index: index,
+                          food: foodList[index],
+                        );
+                      }),
+                ),
               ),
             ],
           ),
@@ -200,18 +237,19 @@ class _HomeState extends State<Home> {
 }
 
 class SingleProduct extends StatelessWidget {
-  final String pro_id;
-  final String pro_name;
-  final String pro_desc;
-  final String pro_image;
-
-  SingleProduct({this.pro_id, this.pro_name, this.pro_desc, this.pro_image});
+  int foo_index;
+  FoodData food;
+  SingleProduct({this.foo_index, this.food});
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => ProductDetail()));
+            context,
+            MaterialPageRoute(
+                builder: (context) => ProductDetail(
+                      food: food,
+                    )));
       },
       child: new Container(
         padding: EdgeInsets.all(10.0),
@@ -222,17 +260,29 @@ class SingleProduct extends StatelessWidget {
             new Container(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height / 4,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15.0),
-                  image: DecorationImage(
-                      fit: BoxFit.cover, image: AssetImage(pro_image))),
+              child: CachedNetworkImage(
+                imageUrl: imagesFood +
+                    (food.foo_thumbnail == null || food.foo_thumbnail == ""
+                        ? "def.png"
+                        : food.foo_thumbnail),
+                imageBuilder: (context, imageProvider) => Container(
+                  height: 80.0,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15.0),
+                    image: DecorationImage(
+                        image: imageProvider, fit: BoxFit.cover),
+                  ),
+                ),
+                placeholder: (context, url) => CircularProgressIndicator(),
+                errorWidget: (context, url, error) => Icon(Icons.error),
+              ),
             ),
             new Text(
-              pro_name,
+              food.foo_name,
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
             new Text(
-              pro_desc,
+              food.foo_info,
               style: TextStyle(color: Colors.grey),
             ),
           ],
@@ -250,22 +300,51 @@ class SingleCategory extends StatelessWidget {
   SingleCategory({this.cat_id, this.cat_name, this.cat_image});
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(right: 10.0),
-      child: Column(
-        children: <Widget>[
-          Container(
-            padding: EdgeInsets.all(10.0),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15.0),
-                color: Colors.red[100]),
-            child: Image.asset(cat_image),
-          ),
-          Text(
-            cat_name,
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-        ],
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => new Product(
+                      cat_id: cat_id,
+                      cat_name: cat_name,
+                    )));
+      },
+      child: Container(
+        padding: EdgeInsets.only(right: 10.0),
+        child: Column(
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.all(10.0),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15.0),
+                  color: Colors.red[100]),
+              child: cat_image == null || cat_image == ""
+                  ? CachedNetworkImage(
+                      height: 64.0,
+                      width: 64.0,
+                      fit: BoxFit.cover,
+                      imageUrl: images_Category + "def.png",
+                      placeholder: (context, url) =>
+                          CircularProgressIndicator(),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                    )
+                  : CachedNetworkImage(
+                      height: 64.0,
+                      width: 64.0,
+                      fit: BoxFit.cover,
+                      imageUrl: images_Category + cat_image,
+                      placeholder: (context, url) =>
+                          CircularProgressIndicator(),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                    ),
+            ),
+            Text(
+              cat_name,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
       ),
     );
   }

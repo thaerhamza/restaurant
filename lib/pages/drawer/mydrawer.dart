@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant/pages/account/changepassword.dart';
+import 'package:restaurant/pages/account/login.dart';
 import 'package:restaurant/pages/account/myprofile.dart';
 import 'package:restaurant/pages/favorite/favorite.dart';
 import 'package:restaurant/pages/order/tracking.dart';
 import 'package:restaurant/pages/product/category.dart';
 import 'package:restaurant/pages/shopping/shopping.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../config.dart';
 
 class MyDrawer extends StatefulWidget {
   @override
@@ -12,6 +16,18 @@ class MyDrawer extends StatefulWidget {
 }
 
 class _MyDrawerState extends State<MyDrawer> {
+  logout(context) async {
+    SharedPreferences sh = await SharedPreferences.getInstance();
+    sh.remove(G_cus_id);
+    sh.remove(G_cus_name);
+    sh.remove(G_cus_image);
+    sh.remove(G_cus_mobile);
+    sh.remove(G_cus_email);
+    sh.clear();
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => Login()));
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context).copyWith(dividerColor: Colors.transparent);
@@ -323,6 +339,36 @@ class _MyDrawerState extends State<MyDrawer> {
                       child: ListTile(
                         title: Text(
                           "مركز الدعم",
+                          style: TextStyle(color: Colors.black, fontSize: 20.0),
+                        ),
+                        leading: Icon(
+                          Icons.phone,
+                          color: Colors.red,
+                        ),
+                        trailing: Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.black,
+                          size: 18.0,
+                        ),
+                      ),
+                    ),
+                    Divider(
+                      color: Colors.grey[500],
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.only(right: 10.0, left: 10.0),
+                child: Column(
+                  children: <Widget>[
+                    InkWell(
+                      onTap: () {
+                        logout(context);
+                      },
+                      child: ListTile(
+                        title: Text(
+                          "خروج",
                           style: TextStyle(color: Colors.black, fontSize: 20.0),
                         ),
                         leading: Icon(
