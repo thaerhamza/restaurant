@@ -32,6 +32,7 @@ Future<Map> SaveDataList(
   String url = path_api + "${urlPage}?token=" + token;
 
   http.Response respone = await http.post(url, body: arrInsert);
+  print(respone.body);
   if (json.decode(respone.body)["code"] == "200") {
     Map arr = json.decode(respone.body)["message"];
 

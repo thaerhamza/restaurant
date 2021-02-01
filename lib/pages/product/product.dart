@@ -3,12 +3,15 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:restaurant/pages/component/progress.dart';
 import 'package:restaurant/pages/product/productData.dart';
 import 'package:restaurant/pages/product/product_detail.dart';
 import 'package:restaurant/pages/provider/loading.dart';
 
 import '../config.dart';
 import '../function.dart';
+
+List<FoodData> foodList = null;
 
 class Product extends StatefulWidget {
   final String cat_id;
@@ -19,16 +22,16 @@ class Product extends StatefulWidget {
 }
 
 class _ProductState extends State<Product> {
-  List<FoodData> foodList = null;
   ScrollController myScroll;
   GlobalKey<RefreshIndicatorState> refreshKey;
   int i = 0;
   bool loadingList = false;
+
   void getDataFood(int count, String strSearch) async {
     loadingList = true;
     setState(() {});
     List arr = await getData(count, 20, "food/readfoodcustomer.php", strSearch,
-        "cat_id=${widget.cat_id}&cus_id=${G_cus_id}&");
+        "cat_id=${widget.cat_id}&cus_id=${G_cus_id_val}&");
     for (int i = 0; i < arr.length; i++) {
       foodList.add(new FoodData(
         foo_id: arr[i]["foo_id"],
@@ -39,6 +42,7 @@ class _ProductState extends State<Product> {
         foo_offer: arr[i]["foo_offer"],
         foo_info: arr[i]["foo_info"],
         foo_info_en: arr[i]["foo_info_en"],
+        fav_id: arr[i]["fav_id"],
         foo_regdate: arr[i]["foo_regdate"],
         foo_thumbnail: arr[i]["foo_thumbnail"],
         foo_image: arr[i]["foo_image"],
@@ -165,25 +169,51 @@ class SingleProduct extends StatelessWidget {
   int foo_index;
   FoodData food;
   SingleProduct({this.foo_index, this.food});
+
+  bool isloadingFav = false;
+  saveFavorite(String fav_id, String foo_id, int foo_idex, context,
+      LoadingControl load) async {
+    if (fav_id != null) {
+      //delete favorite
+      bool res =
+          await deleteData("fav_id", fav_id, "favorite/delete_favorite.php");
+      isloadingFav = res;
+      if (isloadingFav) {
+        foodList[foo_index].fav_id = null;
+        load.add_loading();
+      }
+    } else {
+      //insert favorite
+      Map arr = {"cus_id": G_cus_id_val, "foo_id": foo_id};
+      Map resArray = await SaveDataList(
+          arr, "favorite/insert_favorite.php", context, "insert");
+      isloadingFav = resArray != null ? true : false;
+      if (isloadingFav) {
+        foodList[foo_index].fav_id = resArray["fav_id"];
+        load.add_loading();
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ProductDetail(
-                      food: food,
-                    )));
-      },
-      child: new Container(
-        margin: EdgeInsets.all(5.0),
-        padding: EdgeInsets.all(5.0),
-        decoration: BoxDecoration(
-            color: Colors.grey[100], borderRadius: BorderRadius.circular(5.0)),
-        child: Row(
-          children: <Widget>[
-            Container(
+    return new Container(
+      margin: EdgeInsets.all(5.0),
+      padding: EdgeInsets.all(5.0),
+      decoration: BoxDecoration(
+          color: Colors.grey[100], borderRadius: BorderRadius.circular(5.0)),
+      child: Row(
+        children: <Widget>[
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ProductDetail(
+                            food: food,
+                          )));
+            },
+            child: Container(
               margin: EdgeInsets.only(right: 5.0),
               height: 100.0,
               width: 100.0,
@@ -205,7 +235,17 @@ class SingleProduct extends StatelessWidget {
                 errorWidget: (context, url, error) => Icon(Icons.error),
               ),
             ),
-            Expanded(
+          ),
+          Expanded(
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ProductDetail(
+                              food: food,
+                            )));
+              },
               child: Container(
                 height: 100.0,
                 child: new Column(
@@ -234,22 +274,39 @@ class SingleProduct extends StatelessWidget {
                 ),
               ),
             ),
+          ),
 
-            //=========================favorite
-            Container(
-              height: 100.0,
-              width: 50.0,
-              child: new Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  new Icon(Icons.favorite_border),
-                  checkOffer(food.foo_offer)
-                ],
-              ),
-            )
-            //=========================end favorite
-          ],
-        ),
+          //=========================favorite
+          Container(
+            height: 100.0,
+            width: 50.0,
+            child: new Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Consumer<LoadingControl>(builder: (context, load, child) {
+                  return isloadingFav
+                      ? circularProgress()
+                      : GestureDetector(
+                          onTap: () {
+                            saveFavorite(food.fav_id, food.foo_id, foo_index,
+                                context, load);
+                          },
+                          child: new Icon(
+                            (food.fav_id == null
+                                ? Icons.favorite_border
+                                : Icons.favorite),
+                            color: (food.fav_id == null
+                                ? Colors.black
+                                : Colors.red),
+                          ),
+                        );
+                }),
+                checkOffer(food.foo_offer)
+              ],
+            ),
+          )
+          //=========================end favorite
+        ],
       ),
     );
   }

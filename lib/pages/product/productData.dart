@@ -7,6 +7,7 @@ class FoodData {
   String foo_offer;
   String foo_info;
   String foo_info_en;
+  String fav_id;
   String foo_regdate;
   String foo_thumbnail;
   String foo_image;
@@ -20,6 +21,7 @@ class FoodData {
       this.foo_offer,
       this.foo_info,
       this.foo_info_en,
+      this.fav_id,
       this.foo_regdate,
       this.foo_thumbnail,
       this.foo_image});

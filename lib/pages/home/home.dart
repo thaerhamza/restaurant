@@ -48,7 +48,7 @@ class _HomeState extends State<Home> {
     loadingList = true;
     setState(() {});
     List arr = await getData(count, 20, "food/readfoodcustomer.php", strSearch,
-        "foo_offer=1&cus_id=${G_cus_id}&");
+        "foo_offer=1&cus_id=${G_cus_id_val}&");
     for (int i = 0; i < arr.length; i++) {
       foodList.add(new FoodData(
         foo_id: arr[i]["foo_id"],
@@ -59,6 +59,7 @@ class _HomeState extends State<Home> {
         foo_offer: arr[i]["foo_offer"],
         foo_info: arr[i]["foo_info"],
         foo_info_en: arr[i]["foo_info_en"],
+        fav_id: arr[i]["fav_id"],
         foo_regdate: arr[i]["foo_regdate"],
         foo_thumbnail: arr[i]["foo_thumbnail"],
         foo_image: arr[i]["foo_image"],
