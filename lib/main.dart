@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant/pages/home/home.dart';
+import 'package:restaurant/pages/provider/cart.dart';
 import 'package:restaurant/pages/provider/loading.dart';
 import 'package:restaurant/pages/tips/getStart.dart';
 import 'package:restaurant/pages/tips/tips.dart';
@@ -28,6 +29,9 @@ class _SplashState extends State<Splash> {
         providers: [
           ChangeNotifierProvider<LoadingControl>(
             create: (context) => LoadingControl(),
+          ),
+          ChangeNotifierProvider<Cart>(
+            create: (context) => Cart(),
           )
         ],
         child: MaterialApp(
