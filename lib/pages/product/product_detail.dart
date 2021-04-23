@@ -1,8 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:restaurant/pages/config.dart';
 import 'package:restaurant/pages/product/productData.dart';
+import 'package:restaurant/pages/provider/cart.dart';
+import 'package:restaurant/pages/provider/item.dart';
 import 'package:restaurant/pages/shopping/shopping.dart';
 
 class ProductDetail extends StatefulWidget {
@@ -67,7 +70,33 @@ class _ProductDetailState extends State<ProductDetail> {
     );
   }
 
-  Widget imageProduct() {
+  @override
+  void initState() {
+    super.initState();
+    myitem = new Item(
+        ite_id: widget.food.foo_id,
+        ite_name: widget.food.foo_name,
+        ite_price: int.parse(widget.food.foo_price),
+        ite_image: widget.food.foo_image);
+  }
+
+  Item myitem;
+  int _qty = 0;
+  _minusQty(Cart mypro) {
+    if (_qty != 0) {
+      _qty = _qty - 1;
+      mypro.remove_cart(myitem);
+      print("count item is : " + mypro.getCountItems().toString());
+    }
+  }
+
+  _plusQty(Cart mypro) {
+    _qty = _qty + 1;
+    mypro.add_cart(myitem);
+    print("count item is : " + mypro.getCountItems().toString());
+  }
+
+  Widget imageProduct(Cart mypro) {
     return Container(
       padding: EdgeInsets.only(bottom: 10.0),
       decoration: BoxDecoration(
@@ -111,11 +140,13 @@ class _ProductDetailState extends State<ProductDetail> {
                         FontAwesomeIcons.minus,
                         color: Colors.white,
                       ),
-                      onPressed: () {})),
+                      onPressed: () {
+                        _minusQty(mypro);
+                      })),
               Padding(
                   padding: EdgeInsets.all(10.0),
                   child: Text(
-                    "1",
+                    _qty.toString(),
                     style: TextStyle(color: Colors.black, fontSize: 25.0),
                   )),
 //=======================shopping cart
@@ -135,7 +166,9 @@ class _ProductDetailState extends State<ProductDetail> {
                         FontAwesomeIcons.plus,
                         color: Colors.white,
                       ),
-                      onPressed: () {})),
+                      onPressed: () {
+                        _plusQty(mypro);
+                      })),
             ],
           ),
         ],
@@ -145,6 +178,7 @@ class _ProductDetailState extends State<ProductDetail> {
 
   @override
   Widget build(BuildContext context) {
+    var myprovider = Provider.of<Cart>(context);
     return Scaffold(
       backgroundColor: Colors.white,
       body: Directionality(
@@ -153,7 +187,7 @@ class _ProductDetailState extends State<ProductDetail> {
           children: [
             ListView(
               children: <Widget>[
-                imageProduct(),
+                imageProduct(myprovider),
                 Container(
                   padding: EdgeInsets.all(25.0),
                   child: Column(
