@@ -1,5 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:restaurant/pages/provider/cart.dart';
+import 'package:restaurant/pages/provider/item.dart';
+
+import '../config.dart';
 
 class Shopping extends StatefulWidget {
   @override
@@ -39,36 +45,6 @@ class _ShoppingState extends State<Shopping> {
     );
   }
 
-  var mypro = [
-    {
-      "pro_id": "1",
-      "pro_name": "مشاوي",
-      "pro_price": "100",
-      "pro_image": "images/category/cat1.png",
-      "pro_qty": "3"
-    },
-    {
-      "pro_id": "1",
-      "pro_name": "مشاوي",
-      "pro_price": "100",
-      "pro_image": "images/category/cat1.png",
-      "pro_qty": "3"
-    },
-    {
-      "pro_id": "1",
-      "pro_name": "مشاوي",
-      "pro_price": "100",
-      "pro_image": "images/category/cat1.png",
-      "pro_qty": "3"
-    },
-    {
-      "pro_id": "1",
-      "pro_name": "مشاوي",
-      "pro_price": "100",
-      "pro_image": "images/category/cat1.png",
-      "pro_qty": "3"
-    },
-  ];
   void _showSheetMessage(context) {
     showModalBottomSheet(
         shape: RoundedRectangleBorder(
@@ -144,6 +120,8 @@ class _ShoppingState extends State<Shopping> {
 
   @override
   Widget build(BuildContext context) {
+    var myProvider = Provider.of<Cart>(context);
+
     return Scaffold(
       backgroundColor: Colors.grey[50],
       body: Directionality(
@@ -153,14 +131,11 @@ class _ShoppingState extends State<Shopping> {
             Container(
               margin: EdgeInsets.only(top: 60),
               child: ListView.builder(
-                itemCount: mypro.length,
+                itemCount: myProvider.listItems().length,
                 itemBuilder: (context, index) {
                   return SingleProduct(
-                    pro_id: mypro[index]["pro_id"],
-                    pro_name: mypro[index]["pro_name"],
-                    pro_image: mypro[index]["pro_image"],
-                    pro_qty: mypro[index]["pro_qty"],
-                    pro_price: mypro[index]["pro_price"],
+                    index: index,
+                    item: myProvider.listItems()[index],
                   );
                 },
               ),
@@ -252,20 +227,13 @@ class _ShoppingState extends State<Shopping> {
 }
 
 class SingleProduct extends StatelessWidget {
-  final String pro_id;
-  final String pro_name;
-  final String pro_price;
-  final String pro_qty;
-  final String pro_image;
+  final int index;
+  final Item item;
 
-  SingleProduct(
-      {this.pro_id,
-      this.pro_name,
-      this.pro_image,
-      this.pro_price,
-      this.pro_qty});
+  SingleProduct({this.item, this.index});
   @override
   Widget build(BuildContext context) {
+    var mypro = Provider.of<Cart>(context);
     return Card(
       child: Column(
         children: <Widget>[
@@ -279,18 +247,28 @@ class SingleProduct extends StatelessWidget {
           Container(
             child: ListTile(
               title: Text(
-                pro_name,
+                item.ite_name,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
-              subtitle: Text(pro_price),
+              subtitle: Text(item.ite_price.toString()),
               leading: Container(
-                width: 50.0,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage(pro_image),
-                    fit: BoxFit.cover,
+                margin: EdgeInsets.only(right: 5.0),
+                height: 100.0,
+                width: 100.0,
+                child: CachedNetworkImage(
+                  imageUrl: imagesFood +
+                      (item.ite_image == null || item.ite_image == ""
+                          ? "def.png"
+                          : item.ite_image),
+                  imageBuilder: (context, imageProvider) => Container(
+                    width: 80.0,
+                    height: 80.0,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                          image: imageProvider, fit: BoxFit.cover),
+                    ),
                   ),
-                  shape: BoxShape.circle,
                 ),
               ),
               trailing: Container(
@@ -312,7 +290,7 @@ class SingleProduct extends StatelessWidget {
                     ),
                     Expanded(
                       child: new Text(
-                        pro_qty,
+                        mypro.getCountByItem(item).toString(),
                         style: TextStyle(fontSize: 19),
                         textAlign: TextAlign.center,
                       ),

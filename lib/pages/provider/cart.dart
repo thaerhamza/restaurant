@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/cupertino.dart';
 import 'package:restaurant/pages/provider/item.dart';
 
@@ -16,6 +18,11 @@ class Cart with ChangeNotifier {
     items.remove(item);
     price = price - item.ite_price;
     notifyListeners();
+  }
+
+  List<Item> listItems() {
+    List<Item> result = LinkedHashSet<Item>.from(items).toList();
+    return result;
   }
 
   int getCountItems() {
