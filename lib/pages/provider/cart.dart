@@ -21,8 +21,17 @@ class Cart with ChangeNotifier {
   }
 
   List<Item> listItems() {
-    List<Item> result = LinkedHashSet<Item>.from(items).toList();
-    return result;
+    List<Item> newItems = new List<Item>();
+    items.forEach((item) {
+      var contain = newItems.where((element) => element.ite_id == item.ite_id);
+      if (contain.isEmpty) {
+        newItems.add(item);
+      } else {
+        print("exists");
+      }
+    });
+    // List<Item> result = LinkedHashSet<Item>.from(items).toList();
+    return newItems;
   }
 
   int getCountItems() {

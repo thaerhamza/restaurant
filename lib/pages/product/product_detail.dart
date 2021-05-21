@@ -16,7 +16,7 @@ class ProductDetail extends StatefulWidget {
 }
 
 class _ProductDetailState extends State<ProductDetail> {
-  Widget headerBuild() {
+  Widget headerBuild(Cart mypro) {
     return Container(
       padding: EdgeInsets.all(15.0),
       child: Row(
@@ -54,17 +54,34 @@ class _ProductDetailState extends State<ProductDetail> {
                         offset: Offset(0, 1))
                   ],
                   borderRadius: BorderRadius.circular(15)),
-              child: IconButton(
-                  icon: Icon(
-                    Icons.shopping_cart,
-                    color: Colors.red,
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => new Shopping()));
-                  })),
+              child: Stack(
+                children: [
+                  IconButton(
+                      icon: Icon(
+                        Icons.shopping_cart,
+                        color: Colors.red,
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => new Shopping()));
+                      }),
+                  Container(
+                    alignment: Alignment.center,
+                    width: 20,
+                    height: 20,
+                    decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: new Text(
+                      mypro.getCountItems().toString(),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.white),
+                    ),
+                  )
+                ],
+              )),
         ],
       ),
     );
@@ -97,6 +114,7 @@ class _ProductDetailState extends State<ProductDetail> {
   }
 
   Widget imageProduct(Cart mypro) {
+    _qty = mypro.getCountByItem(myitem);
     return Container(
       padding: EdgeInsets.only(bottom: 10.0),
       decoration: BoxDecoration(
@@ -253,7 +271,7 @@ class _ProductDetailState extends State<ProductDetail> {
               left: 0.0,
               right: 0.0,
               height: 120.0,
-              child: headerBuild(),
+              child: headerBuild(myprovider),
             )
           ],
         ),

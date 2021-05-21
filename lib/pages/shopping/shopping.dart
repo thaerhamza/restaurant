@@ -276,6 +276,9 @@ class SingleProduct extends StatelessWidget {
                 child: Row(
                   children: <Widget>[
                     GestureDetector(
+                      onTap: () {
+                        mypro.add_cart(item);
+                      },
                       child: Container(
                         padding: EdgeInsets.all(5),
                         child: FaIcon(
@@ -296,6 +299,9 @@ class SingleProduct extends StatelessWidget {
                       ),
                     ),
                     GestureDetector(
+                      onTap: () {
+                        mypro.remove_cart(item);
+                      },
                       child: Container(
                         padding: EdgeInsets.all(5),
                         child: FaIcon(
