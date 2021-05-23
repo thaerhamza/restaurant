@@ -38,6 +38,32 @@ class Cart with ChangeNotifier {
     return items.length;
   }
 
+  int totalItems() {
+    List<Item> myarr = listItems();
+    int sumItem = 0;
+    for (int i = 0; i < myarr.length; i++) {
+      sumItem += myarr[i].ite_price * getCountByItem(myarr[i]);
+    }
+    return sumItem;
+  }
+
+  void clearCart() {
+    items.clear();
+  }
+
+  String getStringCart() {
+    List<Item> myarr = listItems();
+    String str = "";
+    for (int i = 0; i < myarr.length; i++) {
+      str += myarr[i].ite_id;
+      str += "," + getCountByItem(myarr[i]).toString();
+      str += "," + myarr[i].ite_price.toString();
+      str += "#";
+    }
+    return str;
+  }
+
+// total qty for item
   int getCountByItem(Item item) {
     int count = 0;
     for (int i = 0; i < items.length; i++) {

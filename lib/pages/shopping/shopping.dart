@@ -2,6 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:restaurant/pages/account/myprofile.dart';
+import 'package:restaurant/pages/function.dart';
+import 'package:restaurant/pages/home/home.dart';
 import 'package:restaurant/pages/provider/cart.dart';
 import 'package:restaurant/pages/provider/item.dart';
 
@@ -45,7 +48,20 @@ class _ShoppingState extends State<Shopping> {
     );
   }
 
-  void _showSheetMessage(context) {
+  saveCart(context, Cart myPro) async {
+    Map arr = {
+      "data": myPro.getStringCart(),
+      "cus_id": G_cus_id_val,
+      "bil_address": "",
+      "bil_before_note": ""
+    };
+
+    var res = await SaveData(
+        arr, "bill/insert_bill.php", context, () => Home(), "insert");
+    myPro.clearCart();
+  }
+
+  void _showSheetMessage(context, Cart myPro) {
     showModalBottomSheet(
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
@@ -91,7 +107,9 @@ class _ShoppingState extends State<Shopping> {
                             borderRadius: BorderRadius.circular(15.0),
                           ),
                         ),
-                        onPressed: () {}),
+                        onPressed: () {
+                          saveCart(context, myPro);
+                        }),
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 5.0),
@@ -163,7 +181,7 @@ class _ShoppingState extends State<Shopping> {
                       children: <Widget>[
                         new Text("اجمالي المبلغ"),
                         new Expanded(child: Text("")),
-                        new Text("100.0")
+                        new Text(myProvider.totalItems().toString())
                       ],
                     ),
                     Divider(
@@ -173,7 +191,7 @@ class _ShoppingState extends State<Shopping> {
                       children: <Widget>[
                         new Text("دلفري"),
                         new Expanded(child: Text("")),
-                        new Text("100.0")
+                        new Text("0")
                       ],
                     ),
                     Divider(
@@ -183,7 +201,7 @@ class _ShoppingState extends State<Shopping> {
                       children: <Widget>[
                         new Text("الاجمالي الكلي"),
                         new Expanded(child: Text("")),
-                        new Text("100.0")
+                        new Text(myProvider.totalItems().toString())
                       ],
                     )
                   ],
@@ -208,7 +226,7 @@ class _ShoppingState extends State<Shopping> {
               alignment: Alignment.center,
               child: GestureDetector(
                 onTap: () {
-                  _showSheetMessage(context);
+                  _showSheetMessage(context, myProvider);
                 },
                 child: Text(
                   "تأكيد الطلبية",
